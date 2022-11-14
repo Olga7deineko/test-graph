@@ -41,47 +41,60 @@
   }
 
   &-header {
-    &-wrapper{
+    &-wrapper {
       display: flex;
       flex-direction: column;
     }
-    &-title{
+
+    &-title {
       font-size: 18px;
       font-weight: 700;
     }
-    &-description{
+
+    &-description {
       margin-top: 8px;
       font-size: 14px;
       color: #999b9b;
     }
+
     &.Mui-expanded {
       border-bottom: 1px solid rgba(0, 0, 0, .18);
     }
   }
-  &-attributes{
+
+  &-attributes {
     display: flex;
     font-size: 13px;
-    &-label{
+
+    &-label {
       display: flex;
       margin-right: 5px;
-      &-required{
+
+      &-required {
         color: red;
       }
     }
-    &-value{
+
+    &-value {
       color: #999b9b;
     }
   }
 
-  &-extend{
+  &-extend {
     margin-top: 5px;
     padding-top: 5px;
     border-top: 1px solid rgba(0, 0, 0, .18);
-    &-label{
+
+    &-label {
       color: #999b9b;
       font-size: 14px;
     }
   }
+
+}
+
+#graph-dialog-description {
+  margin-top: 8px;
 }
 
 .graph-handle {

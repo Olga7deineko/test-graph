@@ -13,6 +13,7 @@ export interface GraphBodeProps extends GraphSidebarProps{
 }
 
 export interface NodeDataAttribute{
+    id: string;
     label: string;
     required: boolean;
     value: string;

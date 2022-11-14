@@ -6,46 +6,55 @@
         "label": "Pet",
         "attributes": [
           {
+            "id": "11",
             "label": "Pet Type",
             "required": true,
             "value": "Enum [string]"
           },
           {
+            "id": "12",
             "label": "Tag",
             "required": false,
             "value": "Array [Tag]"
           },
           {
+            "id": "1",
             "label": "Category",
             "required": false,
             "value": "Category"
           },
           {
+            "id": "14",
             "label": "Id",
             "required": false,
             "value": "integer <int64>"
           },
           {
+            "id": "15",
             "label": "Name",
             "required": true,
             "value": "String"
           },
           {
+            "id": "16",
             "label": "The Very First Long Name Of Celected Animal",
             "required": false,
             "value": "Pet"
           },
           {
+            "id": "17",
             "label": "The Very First Long Name Of Celected Animal",
             "required": false,
             "value": "Pet"
           },
           {
+            "id": "18",
             "label": "Status",
             "required": false,
             "value": "Enum (String)"
           },
           {
+            "id": "19",
             "label": "Color",
             "required": false,
             "value": "Enum (String)"
@@ -61,11 +70,13 @@
         "label": "Tag",
         "attributes": [
           {
+            "id": "21",
             "label": "ID",
             "required": false,
             "value": "integer <int64>"
           },
           {
+            "id": "22",
             "label": "Name",
             "required": false,
             "value": "string"
@@ -80,16 +91,19 @@
         "label": "Category",
         "attributes": [
           {
+            "id": "31",
             "label": "ID",
             "required": false,
             "value": "integer <int64>"
           },
           {
+            "id": "32",
             "label": "Name",
             "required": false,
             "value": "string"
           },
           {
+            "id": "33",
             "label": "@type",
             "required": false,
             "value": "string"
@@ -105,26 +119,31 @@
         "description": "TMF",
         "attributes": [
           {
+            "id": "41",
             "label": "PetType",
             "required": true,
             "value": "= Cat"
           },
           {
+            "id": "42",
             "label": "",
             "required": false,
             "value": "NC"
           },
           {
+            "id": "43",
             "label": "Category",
             "required": false,
             "value": "LazyCatCategory or CrazyCatCategory"
           },
           {
+            "id": "44",
             "label": "",
             "required": false,
             "value": "TMF"
           },
           {
+            "id": "45",
             "label": "huntingSkill",
             "required": true,
             "value": "Enum (String)"
@@ -141,6 +160,7 @@
         "label": "LazyCatCategory",
         "attributes": [
           {
+            "id": "51",
             "label": "Fuzzy",
             "required": true,
             "value": "Enum [String]"
@@ -156,11 +176,13 @@
         "label": "CrazyCatCategory",
         "attributes": [
           {
+            "id": "61",
             "label": "Crazzy",
             "required": true,
             "value": "Enum [string]"
           },
           {
+            "id": "63",
             "label": "Extended Attributes",
             "required": false,
             "value": "MAP (Array)"

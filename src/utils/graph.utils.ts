@@ -27,7 +27,7 @@ export function getNodes(data: Node[]) {
     const nodes: Node[] = [];
     data.forEach((node) => {
 
-        const parentNode = node?.data?.extendId ? nodes?.find((n) => n.id === node?.data?.extendId)?.data : null;
+        const parentNode = node?.data?.extendId ? nodes?.find((n) => n.id === node?.data?.extendId) : null;
         const targetNode = {
             ...node,
             position: {

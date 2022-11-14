@@ -4,13 +4,12 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import React, { memo } from 'react';
 import { Handle, Position } from 'reactflow';
 import '../../styles/graph-custom.style.scss';
-import GraphCustomNodeAttributes from './graph-custom-node-attributes';
+import GraphCustomNodeAttributes from '../../containers/graph-custom-node-attributes.container';
 
-const GraphCustomNode = memo(({ data, ...props }: any) => {
-
+const GraphCustomNode = memo(({ data, selected, id }: any) => {
     return (
         <div key={data?.title + Math.random()}
-             className={`graph-node-wrapper ${props?.selected ? 'selected' : ''}`}>
+             className={`graph-node-wrapper ${selected ? 'selected' : ''}`}>
 
             <Handle className="graph-handle-extend" type="target"
                     position={Position.Bottom}/>
@@ -21,7 +20,7 @@ const GraphCustomNode = memo(({ data, ...props }: any) => {
                     borderRadius: '4px'
                 }}>
                 <AccordionSummary
-                    className={`graph-node-header ${props?.selected ? 'selected' : ''}`}
+                    className={`graph-node-header ${selected ? 'selected' : ''}`}
                     expandIcon={<ExpandMoreIcon/>}
                 >
                     <div className="graph-node-header-wrapper">
@@ -30,14 +29,14 @@ const GraphCustomNode = memo(({ data, ...props }: any) => {
                     </div>
                 </AccordionSummary>
                 <AccordionDetails>
-                    {GraphCustomNodeAttributes(data?.attributes)}
+                    {<GraphCustomNodeAttributes attributes={data?.attributes} nodeId={id} />}
                     {data?.extendId && (
                         <div className="graph-node-extend">
                             <div className="graph-node-extend-label">
                                 <AccountTreeIcon/>
-                                {data?.parent?.label}
+                                {data?.parent?.data?.label}
                             </div>
-                            {GraphCustomNodeAttributes(data?.parent?.attributes)}
+                            {<GraphCustomNodeAttributes attributes={data?.parent?.data?.attributes} nodeId={data?.parent?.id} />}
                         </div>
                     )}
                 </AccordionDetails>

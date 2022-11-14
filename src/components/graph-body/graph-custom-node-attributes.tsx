@@ -1,19 +1,20 @@
 import React from 'react';
 import { NodeDataAttribute } from '../../models/model';
+import GraphCustomNodeAttribute from './graph-custom-node-attribute';
 
-const GraphCustomNodeAttributes = (arr: NodeDataAttribute[]) => {
-    return arr?.map((obj) => (
-        <div className="graph-node-attributes" key={obj?.label + Math.random()}>
-            <div className="graph-node-attributes-label">
-                {obj?.label}
-                {obj?.required && <div className="graph-node-attributes-label-required">*</div>}
-            </div>
+const GraphCustomNodeAttributes = ({ attributes, nodeId, updateNode, nodes }) => {
+    const onSetNewValue = (id: string, attributeName: string, attributeValue: string) => {
+        updateNode({nodeId, id, attributeName, attributeValue, nodes});
+    }
 
-            <div className="graph-node-attributes-value">
-                {obj?.value}
-            </div>
-        </div>
-    ));
+    return (
+        <>
+            {attributes?.map((attribute: NodeDataAttribute) => (
+                <GraphCustomNodeAttribute key={'attribute' + attribute?.label + Math.random()} attribute={attribute} setNewValue={onSetNewValue}/>
+            ))}
+
+        </>
+    );
 };
 
 export default GraphCustomNodeAttributes;

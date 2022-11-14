@@ -21,7 +21,7 @@ const GraphSidebar = ({ graphNodes, selectedId, setSelectedId }: GraphSidebarPro
         <Box className="graph-sidebar">
             <List component="nav">
                 {graphNodes?.map((node: Node) => (<ListItemButton
-                    key={'listItem' + node.id}
+                    key={'listItem' + node.id + Math.random()}
                     selected={selectedId === node.id}
                     onClick={(event) => handleListItemClick(event, node?.id)}
                 >

@@ -10,7 +10,7 @@ import '../styles/graph-header.style.scss'
 
 import { createTheme, ThemeProvider } from '@mui/material';
 
-function GraphHeader() {
+const GraphHeader = () => {
 
     const darkTheme = createTheme({
         palette: {
