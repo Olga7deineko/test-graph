@@ -1,8 +1,8 @@
 import React from 'react';
-import { NodeDataAttribute } from '../../models/model';
+import { GraphCustomNodeAttributesProps, NodeDataAttribute } from '../../models/model';
 import GraphCustomNodeAttribute from './graph-custom-node-attribute';
 
-const GraphCustomNodeAttributes = ({ attributes, nodeId, updateNode, nodes }) => {
+const GraphCustomNodeAttributes = ({ attributes, nodeId, updateNode, nodes }: GraphCustomNodeAttributesProps) => {
     const onSetNewValue = (id: string, attributeName: string, attributeValue: string) => {
         updateNode({nodeId, id, attributeName, attributeValue, nodes});
     }

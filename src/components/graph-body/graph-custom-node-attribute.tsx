@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { GraphCustomNodeAttributeProps } from '../../models/model';
 import GraphChangeAttribute from './graph-change-attribute';
 
-const GraphCustomNodeAttribute = ({ attribute, setNewValue }) => {
+const GraphCustomNodeAttribute = ({ attribute, setNewValue }: GraphCustomNodeAttributeProps) => {
     const [open, setOpen] = useState(false);
     const [isAttribute, setIsAttribute] = useState(false);
-    const [inputValue, setInputValue] = useState();
+    const [inputValue, setInputValue] = useState<string>();
 
     const handleChangeAttribute = () => {
         setOpen(true);
@@ -18,7 +19,7 @@ const GraphCustomNodeAttribute = ({ attribute, setNewValue }) => {
         setInputValue(attribute?.value)
     };
 
-    const onSetNewValue = (value) => {
+    const onSetNewValue = (value?: string) => {
         setOpen(false);
         if(value){
             setNewValue(attribute?.id, isAttribute ? 'label': 'value', value)
