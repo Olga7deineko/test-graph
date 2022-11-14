@@ -1,0 +1,19 @@
+.graph-header {
+  &-left {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+  }
+
+  &-right {
+    flex-grow: 0
+  }
+
+  &-title {
+    display: flex;
+    font-weight: 700;
+    color: inherit;
+    letter-spacing: 0.3rem;
+    text-decoration: none;
+  }
+}

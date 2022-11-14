@@ -1,0 +1,91 @@
+.graph-node {
+
+  &-wrapper {
+    width: 250px;
+    height: auto;
+    background-color: #edf1f5;
+    border-radius: 4px;
+    cursor: pointer;
+
+    & .react-flow__handle {
+      width: 10px;
+      height: 10px;
+      background-color: rgb(189, 196, 204);
+      border: none;
+    }
+
+    &.selected {
+
+      &:before {
+        content: '';
+        position: absolute;
+        display: block;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 4px;
+        pointer-events: none;
+        box-shadow: 0 -1px 0 #dddddd, 0 0 4px rgb(0 0 0 / 12%), 0 8px 16px rgb(0 0 0 / 24%);
+      }
+    }
+
+    & .MuiPaper-root.Mui-expanded {
+      margin: 0 !important;
+      min-height: 20px !important;
+    }
+
+    & .MuiAccordion-root:before {
+      position: unset !important;
+    }
+  }
+
+  &-header {
+    &-wrapper{
+      display: flex;
+      flex-direction: column;
+    }
+    &-title{
+      font-size: 18px;
+      font-weight: 700;
+    }
+    &-description{
+      margin-top: 8px;
+      font-size: 14px;
+      color: #999b9b;
+    }
+    &.Mui-expanded {
+      border-bottom: 1px solid rgba(0, 0, 0, .18);
+    }
+  }
+  &-attributes{
+    display: flex;
+    font-size: 13px;
+    &-label{
+      display: flex;
+      margin-right: 5px;
+      &-required{
+        color: red;
+      }
+    }
+    &-value{
+      color: #999b9b;
+    }
+  }
+
+  &-extend{
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px solid rgba(0, 0, 0, .18);
+    &-label{
+      color: #999b9b;
+      font-size: 14px;
+    }
+  }
+}
+
+.graph-handle {
+  &-extend {
+    background-color: #ff8c00;
+  }
+}
