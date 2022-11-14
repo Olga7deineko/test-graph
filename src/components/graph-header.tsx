@@ -23,7 +23,7 @@ function GraphHeader() {
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                         <Box className="graph-header-left">
-                            <img width="40px" src="/logo.png"/>
+                            <img width="40px" src="/test-graph/logo.png"/>
                             <Typography
                                 variant="h6"
                                 noWrap
