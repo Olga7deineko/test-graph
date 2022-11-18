@@ -1,44 +1,72 @@
+import { Edge } from '@reactflow/core/dist/esm/types/edges';
 import { Node } from '@reactflow/core/dist/esm/types/nodes';
-import { MarkerType } from 'reactflow';
+import { MarkerType, Position } from 'reactflow';
+import {
+    DEFAULT_CONNECTION_COLOR,
+    EDGE_STEP_TYPE,
+    EXTEND_CONNECTION_COLOR,
+    NODE_CUSTOM_TYPE,
+    NODE_HEIGHT,
+    NODE_WIDTH
+} from '../constants/graph.constants';
 
-
-// @ts-ignore
-export function getEdges(data) {
-    // @ts-ignore
-    return data?.map((edge) => {
-        return {
-            ...edge,
-            type: 'smart',
-            markerEnd: {
-                type: MarkerType.Arrow,
-                width: 10,
-                height: 10,
-                color: edge.type === 'extend' ? '#ff8c00' : '#808080'
-            },
-            style: {
-                strokeWidth: 2,
-                stroke: edge.type === 'extend' ? '#ff8c00' : '#808080'
-            }
-        }
+export const prepareEdges = (nodes: Node[]) => {
+    const edges: Edge[] = [];
+    nodes?.forEach((node) => {
+        node?.data?.outputConnections && node?.data?.outputConnections.forEach((connection: string) => {
+            edges.push({
+                id: `e${node?.id}-e${connection}`,
+                source: node?.id,
+                target: connection,
+                targetHandle: `${connection}${node?.id}`,
+                sourceHandle: `${node?.id}${connection}`,
+                type: EDGE_STEP_TYPE,
+                markerEnd: {
+                    type: MarkerType.Arrow,
+                    width: 10,
+                    height: 10,
+                    color: node?.data?.extendId === connection ? EXTEND_CONNECTION_COLOR : DEFAULT_CONNECTION_COLOR
+                },
+                style: {
+                    strokeWidth: 3,
+                    stroke: node?.data?.extendId === connection ? EXTEND_CONNECTION_COLOR: DEFAULT_CONNECTION_COLOR
+                }
+            })
+        })
     });
+    return edges;
 }
 
-export function getNodes(data: Node[]) {
-    const nodes: Node[] = [];
-    data.forEach((node) => {
+export const getNodes = (nodes: Node[]) => {
+    const newNodes: Node[] = [];
 
+    nodes.forEach((node, index) => {
         const parentNode = node?.data?.extendId ? nodes?.find((n) => n.id === node?.data?.extendId) : null;
         const targetNode = {
             ...node,
             position: {
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
+                x: node?.data?.isParent ? 0 : (NODE_WIDTH * (index + 1)) / 2 + NODE_WIDTH,
+                y: NODE_HEIGHT * 3 * (index + 1),
             },
-            data:{...node?.data, parent: parentNode},
-            type: 'custom'
-        };
+            sourcePosition: Position.Right,
+            targetPosition: Position.Left,
+            data: { ...node?.data, parent: parentNode },
+            type: NODE_CUSTOM_TYPE
+        } as Node;
 
-        nodes.push(targetNode);
+        newNodes.push(targetNode);
     });
-    return nodes;
+    return newNodes;
+};
+
+export const generateSourceHandlePosition = (id: string, isExtendedConnection: boolean, connection: string) => {
+    return isExtendedConnection ? Position.Top : id === connection ? Position.Left : Position.Right
 }
+
+export const generateSourceHandleStyles = (isExtendedConnection: boolean, index: number) => {
+    return isExtendedConnection ? {
+        left: 10 + index * 15,
+        right: 'auto'
+    } : { top: 10 + index * 15, bottom: 'auto' }
+}
+

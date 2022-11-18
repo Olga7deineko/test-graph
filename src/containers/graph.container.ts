@@ -1,24 +1,22 @@
 import { bindActionCreators, compose, Dispatch } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
-import GraphBody from '../components/graph-body/graph-body';
-import { setSelectedId } from '../reducers/graph-nodes.reducer';
+import Graph from '../components/graph';
+import { fetchNodes } from '../reducers/graph-nodes.reducer';
 
 const mapStateToProps = (state: any) => {
     return {
-        graphNodes: state?.['graphNodes']?.nodes,
-        graphEdges: state?.['graphNodes']?.edges,
-        selectedId: state?.['graphNodes']?.selectedId
+        nodes: state?.['graphNodes']?.nodes
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
     bindActionCreators(
         {
-            setSelectedId
+            fetchGraphNodes: fetchNodes
         },
         dispatch
     );
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps)
-)(GraphBody);
+)(Graph);

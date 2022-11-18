@@ -1,6 +1,11 @@
 import { Node } from '@reactflow/core/dist/esm/types/nodes';
 import { Edge } from 'reactflow';
 
+export interface GraphProps {
+    nodes: Node[];
+    fetchGraphNodes: () => void;
+}
+
 export interface GraphSidebarProps {
     graphNodes: Node[];
     selectedId: string | undefined;
@@ -9,7 +14,6 @@ export interface GraphSidebarProps {
 
 export interface GraphBodeProps extends GraphSidebarProps {
     graphEdges: Edge[];
-    fetchGraphNodes: () => void;
 }
 
 export interface NodeDataAttribute {
@@ -23,8 +27,10 @@ export interface NodeData {
     label: string;
     description?: string;
     attributes?: NodeDataAttribute[];
-    childrenIds?: string[];
+    inputConnections?: string[];
+    outputConnections?: string[];
     extendId?: string;
+    isParent?: boolean;
 }
 
 export interface GraphChangeAttributeProps {

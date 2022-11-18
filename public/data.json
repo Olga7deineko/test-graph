@@ -60,7 +60,9 @@
             "value": "Enum (String)"
           }
         ],
-        "childrenIds": ["1", "2", "3"]
+        "inputConnections": ["1", "4"],
+        "outputConnections": ["1", "2", "3"],
+        "isParent": true
       },
       "position": { "x": 0, "y": 0 }
     },
@@ -81,7 +83,8 @@
             "required": false,
             "value": "string"
           }
-        ]
+        ],
+        "inputConnections": ["1"]
       },
       "position": { "x": 0, "y": 0 }
     },
@@ -108,7 +111,8 @@
             "required": false,
             "value": "string"
           }
-        ]
+        ],
+        "inputConnections": ["1", "5", "6"]
       },
       "position": { "x": 0, "y": 0 }
     },
@@ -149,8 +153,9 @@
             "value": "Enum (String)"
           }
         ],
-        "childrenIds": ["5", "6"],
-        "extendId": "1"
+        "outputConnections": ["1", "5", "6"],
+        "extendId": "1",
+        "isParent": true
       },
       "position": { "x": 0, "y": 0 }
     },
@@ -166,6 +171,8 @@
             "value": "Enum [String]"
           }
         ],
+        "inputConnections": ["4"],
+        "outputConnections": ["3"],
         "extendId": "3"
       },
       "position": { "x": 0, "y": 0 }
@@ -188,59 +195,11 @@
             "value": "MAP (Array)"
           }
         ],
+        "inputConnections": ["4"],
+        "outputConnections": ["3"],
         "extendId": "3"
       },
       "position": { "x": 0, "y": 0 }
-    }
-  ],
-  "edges": [
-    {
-      "id": "e1-1",
-      "source": "1",
-      "target": "1",
-      "type": "selfReference"
-    },
-    {
-      "id": "e1-2",
-      "source": "1",
-      "target": "2",
-      "type": "composition"
-    },
-    {
-      "id": "e1-3",
-      "source": "1",
-      "target": "3",
-      "type": "composition"
-    },
-    {
-      "id": "e4-1",
-      "source": "4",
-      "target": "1",
-      "type": "extend"
-    },
-    {
-      "id": "e4-5",
-      "source": "4",
-      "target": "5",
-      "type": "composition"
-    },
-    {
-      "id": "e4-6",
-      "source": "4",
-      "target": "6",
-      "type": "composition"
-    },
-    {
-      "id": "e5-3",
-      "source": "5",
-      "target": "3",
-      "type": "extend"
-    },
-    {
-      "id": "e6-3",
-      "source": "6",
-      "target": "3",
-      "type": "extend"
     }
   ]
 }

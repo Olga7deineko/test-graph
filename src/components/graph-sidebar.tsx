@@ -17,7 +17,7 @@ const GraphSidebar = ({ graphNodes, selectedId, setSelectedId }: GraphSidebarPro
         setSelectedId(id);
     };
 
-    return graphNodes?.length && (
+    return graphNodes?.length > 0 && (
         <Box className="graph-sidebar">
             <List component="nav">
                 {graphNodes?.map((node: Node) => (<ListItemButton

@@ -10,8 +10,15 @@
     & .react-flow__handle {
       width: 10px;
       height: 10px;
-      background-color: rgb(189, 196, 204);
+      background-color: #808080;
       border: none;
+      z-index: 1;
+      &.extended{
+        background-color: #ff8c00;
+      }
+      &.graph-handle-target{
+        background-color: transparent;
+      }
     }
 
     &.selected {
@@ -95,10 +102,4 @@
 
 #graph-dialog-description {
   margin-top: 8px;
-}
-
-.graph-handle {
-  &-extend {
-    background-color: #ff8c00;
-  }
 }

@@ -1,5 +1,4 @@
 import { Node } from '@reactflow/core/dist/esm/types/nodes';
-import { SmartStepEdge } from '@tisoap/react-flow-smart-edge';
 import React, { MouseEvent as ReactMouseEvent, useCallback, useEffect } from 'react';
 import {
     addEdge,
@@ -13,12 +12,8 @@ import {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { GraphBodeProps } from '../../models/model';
-import { getEdges, getNodes } from '../../utils/graph.utils';
+import { getNodes } from '../../utils/graph.utils';
 import GraphCustomNode from './graph-custom-node';
-
-const edgeTypes = {
-    smart: SmartStepEdge
-}
 
 const nodeTypes = {
     custom: GraphCustomNode
@@ -28,8 +23,7 @@ const GraphBody = ({
                        graphNodes,
                        graphEdges,
                        selectedId,
-                       setSelectedId,
-                       fetchGraphNodes
+                       setSelectedId
                    }: GraphBodeProps): any => {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -39,14 +33,9 @@ const GraphBody = ({
     );
 
     useEffect(() => {
-        fetchGraphNodes();
-    }, []);
-
-
-    useEffect(() => {
         if (graphNodes?.length && graphEdges?.length) {
             setNodes(getNodes(graphNodes));
-            setEdges(getEdges(graphEdges));
+            setEdges(graphEdges);
         }
     }, [graphNodes]);
 
@@ -64,7 +53,7 @@ const GraphBody = ({
     };
 
 
-    return nodes?.length && (
+    return nodes?.length > 0 && (
         <div style={{ width: '100%', height: '100vh' }}>
             <ReactFlowProvider>
                 <ReactFlow
@@ -76,7 +65,6 @@ const GraphBody = ({
                     onNodeClick={handleElementClick}
                     fitView
                     nodeTypes={nodeTypes}
-                    edgeTypes={edgeTypes}
                 >
                     <Background color="#aaa" gap={16}/>
                 </ReactFlow>
