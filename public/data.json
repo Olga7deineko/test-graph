@@ -61,8 +61,7 @@
           }
         ],
         "inputConnections": ["1", "4"],
-        "outputConnections": ["1", "2", "3"],
-        "isParent": true
+        "outputConnections": ["1", "2", "3"]
       },
       "position": { "x": 0, "y": 0 }
     },
@@ -113,6 +112,7 @@
           }
         ],
         "inputConnections": ["1", "5", "6"]
+
       },
       "position": { "x": 0, "y": 0 }
     },
@@ -154,8 +154,7 @@
           }
         ],
         "outputConnections": ["1", "5", "6"],
-        "extendId": "1",
-        "isParent": true
+        "parentId": "1"
       },
       "position": { "x": 0, "y": 0 }
     },
@@ -173,7 +172,7 @@
         ],
         "inputConnections": ["4"],
         "outputConnections": ["3"],
-        "extendId": "3"
+        "parentId": "3"
       },
       "position": { "x": 0, "y": 0 }
     },
@@ -197,7 +196,7 @@
         ],
         "inputConnections": ["4"],
         "outputConnections": ["3"],
-        "extendId": "3"
+        "parentId": "3"
       },
       "position": { "x": 0, "y": 0 }
     }

@@ -1,6 +1,6 @@
 import { Edge } from '@reactflow/core/dist/esm/types/edges';
 import { Node } from '@reactflow/core/dist/esm/types/nodes';
-import { MarkerType, Position } from 'reactflow';
+import { MarkerType } from 'reactflow';
 import {
     DEFAULT_CONNECTION_COLOR,
     EDGE_STEP_TYPE,
@@ -25,11 +25,11 @@ export const prepareEdges = (nodes: Node[]) => {
                     type: MarkerType.Arrow,
                     width: 10,
                     height: 10,
-                    color: node?.data?.extendId === connection ? EXTEND_CONNECTION_COLOR : DEFAULT_CONNECTION_COLOR
+                    color: node?.data?.parentId === connection ? EXTEND_CONNECTION_COLOR : DEFAULT_CONNECTION_COLOR
                 },
                 style: {
                     strokeWidth: 3,
-                    stroke: node?.data?.extendId === connection ? EXTEND_CONNECTION_COLOR: DEFAULT_CONNECTION_COLOR
+                    stroke: node?.data?.parentId === connection ? EXTEND_CONNECTION_COLOR : DEFAULT_CONNECTION_COLOR
                 }
             })
         })
@@ -41,16 +41,33 @@ export const getNodes = (nodes: Node[]) => {
     const newNodes: Node[] = [];
 
     nodes.forEach((node, index) => {
-        const parentNode = node?.data?.extendId ? nodes?.find((n) => n.id === node?.data?.extendId) : null;
+        const parentNode = node?.data?.parentId ? nodes?.find((n) => n.id === node?.data?.parentId) : null;
+        const childIds = nodes?.filter((n) => n?.data?.parentId === node?.id)?.map((n) => n?.id) ?? null;
+        const isZeroXPosition = node?.data?.outputConnections?.filter((con: string) => con !== node?.data?.parentId)?.length > 0;
+
+        // we form arrays of inputs and outputs of nodes from the type of these connections.
+        // We define that inherited connection have a top\bottom position, and compositions have a right\left position
+        const outputRightConnections = node?.data?.outputConnections?.filter((con: string) => con !== node?.data?.parentId && con !== node?.id);
+        const outputLeftConnections = node?.data?.outputConnections?.filter((con: string) => con !== node?.data?.parentId && con === node?.id);
+
+        const outputTopConnections = node?.data?.outputConnections?.filter((con: string) => con === node?.data?.parentId);
+
+        const inputLeftConnections = node?.data?.inputConnections?.filter((con: string) => !childIds?.includes(con));
+
+        const inputBottomConnections = childIds.filter((child: string) => node?.data?.inputConnections?.includes(child));
+
         const targetNode = {
             ...node,
             position: {
-                x: node?.data?.isParent ? 0 : (NODE_WIDTH * (index + 1)) / 2 + NODE_WIDTH,
-                y: NODE_HEIGHT * 3 * (index + 1),
+                x: isZeroXPosition ? 0 : (NODE_WIDTH * 2),
+                y: NODE_HEIGHT * (isZeroXPosition ? 3 : 2) * (index + 1),
             },
-            sourcePosition: Position.Right,
-            targetPosition: Position.Left,
-            data: { ...node?.data, parent: parentNode },
+            data: {
+                ...node?.data, parent: parentNode, childIds: childIds,
+                outputRightConnections, outputLeftConnections,
+                outputTopConnections, inputLeftConnections,
+                inputBottomConnections
+            },
             type: NODE_CUSTOM_TYPE
         } as Node;
 
@@ -58,15 +75,4 @@ export const getNodes = (nodes: Node[]) => {
     });
     return newNodes;
 };
-
-export const generateSourceHandlePosition = (id: string, isExtendedConnection: boolean, connection: string) => {
-    return isExtendedConnection ? Position.Top : id === connection ? Position.Left : Position.Right
-}
-
-export const generateSourceHandleStyles = (isExtendedConnection: boolean, index: number) => {
-    return isExtendedConnection ? {
-        left: 10 + index * 15,
-        right: 'auto'
-    } : { top: 10 + index * 15, bottom: 'auto' }
-}
 

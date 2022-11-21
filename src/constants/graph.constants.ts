@@ -6,3 +6,8 @@ export const NODE_HEIGHT = 50;
 
 export const EXTEND_CONNECTION_COLOR = '#ff8c00';
 export const DEFAULT_CONNECTION_COLOR = '#808080';
+
+export enum HandleType {
+    Target = "target",
+    Source = "source"
+}

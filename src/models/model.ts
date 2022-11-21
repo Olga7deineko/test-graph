@@ -1,5 +1,5 @@
 import { Node } from '@reactflow/core/dist/esm/types/nodes';
-import { Edge } from 'reactflow';
+import { Edge, HandleType, Position } from 'reactflow';
 
 export interface GraphProps {
     nodes: Node[];
@@ -8,12 +8,18 @@ export interface GraphProps {
 
 export interface GraphSidebarProps {
     graphNodes: Node[];
-    selectedId: string | undefined;
+    selectedId?: string;
     setSelectedId: (id: string) => void;
 }
 
 export interface GraphBodeProps extends GraphSidebarProps {
     graphEdges: Edge[];
+}
+
+export interface GraphCustomNodeAccordionProps {
+    selected?: boolean;
+    data: NodeData;
+    nodeId?: string;
 }
 
 export interface NodeDataAttribute {
@@ -29,8 +35,9 @@ export interface NodeData {
     attributes?: NodeDataAttribute[];
     inputConnections?: string[];
     outputConnections?: string[];
-    extendId?: string;
-    isParent?: boolean;
+    parentId?: string;
+    childIds?: string[];
+    parent?: Node;
 }
 
 export interface GraphChangeAttributeProps {
@@ -41,7 +48,7 @@ export interface GraphChangeAttributeProps {
 }
 
 export interface UpdateNodePayload {
-    nodeId: string;
+    nodeId?: string;
     id: string;
     attributeName: string;
     attributeValue: string;
@@ -49,8 +56,8 @@ export interface UpdateNodePayload {
 }
 
 export interface GraphCustomNodeAttributesProps {
-    attributes: NodeDataAttribute[];
-    nodeId: string;
+    attributes?: NodeDataAttribute[];
+    nodeId?: string;
     updateNode: (data: UpdateNodePayload) => void;
     nodes: Node[];
 }
@@ -58,4 +65,12 @@ export interface GraphCustomNodeAttributesProps {
 export interface GraphCustomNodeAttributeProps {
     attribute: NodeDataAttribute;
     setNewValue: (id: string, attributeName: string, attributeValue: string) => void;
+}
+
+export interface GraphCustomHandleProps {
+    connections: string[];
+    type: HandleType;
+    position: Position;
+    nodeId?: string;
+    parentId?: string;
 }

@@ -11,9 +11,9 @@ import {
     useNodesState
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { GraphBodeProps } from '../../models/model';
-import { getNodes } from '../../utils/graph.utils';
-import GraphCustomNode from './graph-custom-node';
+import { GraphBodeProps } from '../models/model';
+import { getNodes } from '../utils/graph.utils';
+import GraphCustomNode from './graph-custom/graph-custom-node';
 
 const nodeTypes = {
     custom: GraphCustomNode

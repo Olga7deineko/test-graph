@@ -1,6 +1,6 @@
 import { bindActionCreators, compose, Dispatch } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
-import GraphCustomNodeAttributes from '../components/graph-body/graph-custom-node-attributes';
+import GraphCustomNodeAttributes from '../components/graph-custom/graph-custom-node-attributes';
 import { updateNode } from '../reducers/graph-nodes.reducer';
 
 const mapStateToProps = (state: any) => {

@@ -1,6 +1,6 @@
 import { bindActionCreators, compose, Dispatch } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
-import GraphBody from '../components/graph-body/graph-body';
+import GraphBody from '../components/graph-body';
 import { setSelectedId } from '../reducers/graph-nodes.reducer';
 
 const mapStateToProps = (state: any) => {
