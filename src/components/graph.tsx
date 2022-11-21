@@ -4,7 +4,7 @@ import { GraphProps } from '../models/model';
 import GraphHeader from './graph-header';
 import GraphSidebar from '../containers/graph-sidebar.container';
 import GraphBody from '../containers/graph-body.container';
-import '../styles/graph-main.style.scss';
+import '../styles/index.scss';
 
 export const Graph = ({ nodes, fetchGraphNodes }: GraphProps) => {
 

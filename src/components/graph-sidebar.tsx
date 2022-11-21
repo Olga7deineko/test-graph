@@ -5,8 +5,6 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { GraphSidebarProps } from '../models/model';
-import '../styles/graph-sidebar.style.scss';
-
 
 const GraphSidebar = ({ graphNodes, selectedId, setSelectedId }: GraphSidebarProps): any => {
 

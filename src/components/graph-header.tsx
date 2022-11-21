@@ -6,7 +6,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
-import '../styles/graph-header.style.scss'
 
 import { createTheme, ThemeProvider } from '@mui/material';
 

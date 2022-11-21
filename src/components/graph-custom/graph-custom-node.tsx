@@ -1,7 +1,6 @@
 import React from 'react';
 import { Position } from 'reactflow';
 import { HandleType } from '../../constants/graph.constants';
-import '../../styles/graph-custom.style.scss';
 import GraphCustomHandle from './graph-custom-handle';
 import GraphCustomNodeAccordion from './graph-custom-node-accordion';
 
