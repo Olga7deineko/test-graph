@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+import { Handle, Position } from 'reactflow';
+import { HandleType } from '../../constants/graph.constants';
 import { GraphCustomNodeAttributeProps } from '../../models/model';
 import GraphChangeAttribute from './graph-change-attribute';
 
-const GraphCustomNodeAttribute = ({ attribute, setNewValue }: GraphCustomNodeAttributeProps) => {
+const GraphCustomNodeAttribute = ({ attribute, setNewValue, edges }: GraphCustomNodeAttributeProps) => {
     const [open, setOpen] = useState(false);
     const [isAttribute, setIsAttribute] = useState(false);
     const [inputValue, setInputValue] = useState<string>();
+    const isOutputConnection = edges?.find((edge) => edge.target === attribute.id || edge.source === attribute.id)
 
     const handleChangeAttribute = () => {
         setOpen(true);
@@ -21,8 +24,8 @@ const GraphCustomNodeAttribute = ({ attribute, setNewValue }: GraphCustomNodeAtt
 
     const onSetNewValue = (value?: string) => {
         setOpen(false);
-        if(value){
-            setNewValue(attribute?.id, isAttribute ? 'label': 'value', value)
+        if (value) {
+            setNewValue(attribute?.id, isAttribute ? 'label' : 'value', value)
         }
     };
 
@@ -38,7 +41,17 @@ const GraphCustomNodeAttribute = ({ attribute, setNewValue }: GraphCustomNodeAtt
             </div>
 
             {open &&
-                <GraphChangeAttribute open={open} setNewValue={onSetNewValue} defaultInputValue={inputValue} isAttribute={isAttribute}/>}
+                <GraphChangeAttribute open={open} setNewValue={onSetNewValue} defaultInputValue={inputValue}
+                                      isAttribute={isAttribute}/>}
+            {isOutputConnection && <div className={`graph-handle-style-wrapper right`}>
+                <Handle
+                    className={`graph-handle-style 
+                                   right graph-handle-${HandleType.Source}`}
+                    id={`${isOutputConnection?.source}${isOutputConnection?.target}`}
+                    type={HandleType.Source}
+                    key={'handle-' + HandleType.Source + isOutputConnection.target + Math.random()}
+                    position={Position.Right}/>
+            </div>}
         </div>);
 };
 

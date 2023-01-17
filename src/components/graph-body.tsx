@@ -33,8 +33,11 @@ const GraphBody = ({
     );
 
     useEffect(() => {
-        if (graphNodes?.length && graphEdges?.length) {
+        if (graphNodes?.length) {
             setNodes(getNodes(graphNodes));
+        }
+        console.log('graphEdges', graphEdges, getNodes(graphNodes));
+        if (graphEdges?.length) {
             setEdges(graphEdges);
         }
     }, [graphNodes]);

@@ -5,7 +5,8 @@ import { updateNode } from '../reducers/graph-nodes.reducer';
 
 const mapStateToProps = (state: any) => {
     return {
-        nodes: state?.['graphNodes']?.nodes
+        nodes: state?.['graphNodes']?.nodes,
+        edges: state?.['graphNodes']?.edges,
     };
 };
 
