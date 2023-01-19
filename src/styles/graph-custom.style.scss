@@ -2,7 +2,8 @@
   &-node {
 
     &-wrapper {
-      width: 250px;
+      width: auto;
+      min-width: 250px;
       height: auto;
       background-color: #edf1f5;
       border-radius: 4px;
@@ -88,6 +89,13 @@
 
       &-value {
         color: #999b9b;
+        display: flex;
+        align-items: center;
+        .react-flow__handle-right{
+          right: -4px;
+          top: auto;
+          transform: initial;
+        }
       }
     }
 

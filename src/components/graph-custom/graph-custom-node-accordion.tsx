@@ -26,7 +26,6 @@ const GraphCustomNodeAccordion = ({ selected, data, nodeId }: GraphCustomNodeAcc
             </AccordionSummary>
             <AccordionDetails>
                 <GraphCustomNodeRow nodeId={nodeId}/>
-                {<GraphCustomNodeAttributes attributes={data?.attributes} nodeId={nodeId}/>}
                 {data?.parentId && (
                     <div className="graph-node-extend">
                         <div className="graph-node-extend-label">

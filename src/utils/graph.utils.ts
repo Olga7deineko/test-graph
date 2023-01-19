@@ -107,6 +107,7 @@ const addAttributesForNode = (data: any, nodes: Node[], currentNode: Node<any>, 
                     const extNode = createNodeRecursive(value, nodes, edges);
                     addExtNodeAttribute(edges, extNode, nodes, key, value);
                     addNodeAttribute(edges, currentNode, nodes, key, value);
+                    createEdgesData(currentNode?.id, extNode?.id, edges);
                 } else if (value?.type === 'object') {
                     const createdNode = createNodeRecursive(value, nodes, edges);
                     addNodeAttribute(edges, currentNode, nodes, key, value, createdNode?.data.label);
@@ -115,7 +116,9 @@ const addAttributesForNode = (data: any, nodes: Node[], currentNode: Node<any>, 
                     addNodeAttribute(edges, currentNode, nodes, key, value, createdNode?.data.label);
                 } else if (value?.['oneOf'] && value?.['oneOf'].length > 0) {
                     for (const oneOfElement of value?.['oneOf']) {
-                        createNodeRecursive(oneOfElement, nodes, edges);
+                        const createdNode = createNodeRecursive(oneOfElement, nodes, edges);
+                        createEdgesData(currentNode?.id, createdNode?.id, edges);
+
                     }
                 } else {
                     addNodeAttribute(edges, currentNode, nodes, key, value);
@@ -172,7 +175,7 @@ const addNodeAttribute = (edges: Edge[],
         }
     }
     const attributeData = {
-        id: attributeId,
+        id: uniqueFlowId()?.toString(),
         label: attributeName,
         required: currentNode.data.required?.includes(attributeName),
         value: attributeType ?? attributeValue?.type + ' ' + (attributeValue?.format !== 'undefined' ? attributeValue?.format : ''),
@@ -203,33 +206,6 @@ const updateNodeParentId = (parentId: any, node: Node, nodes: Node[]) => {
 export const uniqueFlowId = () => {
     const array = new Uint32Array(1);
     return crypto.getRandomValues(array)[0];
-}
-
-export const prepareEdges = (nodes: Node[]) => {
-    const edges: Edge[] = []
-    nodes?.forEach((node) => {
-        node?.data?.outputConnections && node?.data?.outputConnections.forEach((connection: string) => {
-            edges.push({
-                id: `e${node?.id}-e${connection}`,
-                source: node?.id,
-                target: connection,
-                targetHandle: `${connection}${node?.id}`,
-                sourceHandle: `${node?.id}${connection}`,
-                type: EDGE_STEP_TYPE,
-                markerEnd: {
-                    type: MarkerType.Arrow,
-                    width: 10,
-                    height: 10,
-                    color: node?.data?.parentId === connection ? EXTEND_CONNECTION_COLOR : DEFAULT_CONNECTION_COLOR,
-                },
-                style: {
-                    strokeWidth: 3,
-                    stroke: node?.data?.parentId === connection ? EXTEND_CONNECTION_COLOR : DEFAULT_CONNECTION_COLOR,
-                },
-            })
-        })
-    })
-    return edges
 }
 
 export const getNodes = (nodes: Node[], graphEdges?: Edge[]) => {
