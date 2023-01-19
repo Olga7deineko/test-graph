@@ -17,8 +17,8 @@ export const prepareData = (data: any) => {
     return {nodes, edges};
 }
 
- const createEdgesData = (sourceId: string, targetId: string, acumEdges: Edge[], node?: Node) => {
-    if(sourceId && targetId){
+const createEdgesData = (sourceId: string, targetId: string, acumEdges: Edge[], node?: Node) => {
+    if (sourceId && targetId) {
         acumEdges.push({
             id: `e${sourceId}-e${targetId}`,
             source: sourceId,
@@ -41,7 +41,7 @@ export const prepareData = (data: any) => {
     return acumEdges;
 }
 
- const createNodeRecursive = (data: any, nodes: Node[], edges: Edge[]) => {
+const createNodeRecursive = (data: any, nodes: Node[], edges: Edge[]) : any => {
     const currentNode = createNode(data, nodes);
     if (!currentNode) {
         return;
@@ -77,7 +77,7 @@ export const prepareData = (data: any) => {
     }
 }
 
- const createNode = (data: any, nodes: Node[]) => {
+const createNode = (data: any, nodes: Node[]) => {
     const generatedId = uniqueFlowId()?.toString();
     const label = data?.title ?? data?.xml?.name;
     const find = nodes.find(n => n.data.label === label);
@@ -88,7 +88,9 @@ export const prepareData = (data: any) => {
         id: generatedId,
         data: {
             label: label,
-            attributes: []
+            attributes: [],
+            attributesIds: [],
+            type: 'object'
         },
         position: {'x': 0, 'y': 0},
     };
@@ -100,29 +102,66 @@ const addAttributesForNode = (data: any, nodes: Node[], currentNode: Node<any>, 
     if (data.properties) {
         Object.entries(data.properties)
             .forEach(([key, value]: [string, any]) => {
-                if (value?.type === 'object') {
+                if (value.additionalProperties && value.type === 'object') {
+                    value.title = currentNode.data.label + ' ' + key;
+                    const extNode = createNodeRecursive(value, nodes, edges);
+                    addExtNodeAttribute(edges, extNode, nodes, key, value);
+                    addNodeAttribute(edges, currentNode, nodes, key, value);
+                } else if (value?.type === 'object') {
                     const createdNode = createNodeRecursive(value, nodes, edges);
-                    addNodeAttribute(edges,currentNode, nodes, key, value, createdNode?.data.label);
+                    addNodeAttribute(edges, currentNode, nodes, key, value, createdNode?.data.label);
                 } else if (value?.type === 'array') {
                     const createdNode = createNodeRecursive(value.items, nodes, edges);
-                    addNodeAttribute(edges,currentNode, nodes, key, value, createdNode?.data.label);
+                    addNodeAttribute(edges, currentNode, nodes, key, value, createdNode?.data.label);
                 } else if (value?.['oneOf'] && value?.['oneOf'].length > 0) {
                     for (const oneOfElement of value?.['oneOf']) {
                         createNodeRecursive(oneOfElement, nodes, edges);
                     }
                 } else {
-                    addNodeAttribute(edges,currentNode, nodes, key, value);
+                    addNodeAttribute(edges, currentNode, nodes, key, value);
                 }
             })
     }
+
 }
 
- const addNodeAttribute = (edges: Edge[],
-                                 currentNode: Node,
-                                 nodes: Node[],
-                                 attributeName: string,
-                                 attributeValue: any,
-                                 attributeType?: string) => {
+const addExtNodeAttribute = (edges: Edge[],
+                             currentNode: Node,
+                             nodes: Node[],
+                             key: string,
+                             value: any) => {
+    if (value.additionalProperties && value.type === 'object') {
+        if (value.additionalProperties.type === 'array' &&
+            Object.keys(value.additionalProperties.items).length === 1) {
+            addNodeAttribute(edges,
+                currentNode,
+                nodes,
+                `[${value.additionalProperties.items.type}]`,
+                null,
+                `${key}Schema`);
+        }
+    }
+    const connectionData = nodes.find((node) => node?.data?.label.includes(key));
+
+    if (connectionData) {
+        createEdgesData(key, connectionData?.id, edges);
+    }
+    return currentNode
+}
+
+const addNodeAttribute = (edges: Edge[],
+                          currentNode: Node,
+                          nodes: Node[],
+                          attributeName: string,
+                          attributeValue: any,
+                          attributeType?: string) => {
+    const attributeId = uniqueFlowId()?.toString();
+    const connectionData = nodes.find((node) => node?.data?.label === attributeType);
+
+    if (connectionData) {
+        createEdgesData(attributeId, connectionData?.id, edges);
+    }
+
     if (currentNode.data.attributes.find((a: any) => a.label === attributeName)) {
         return currentNode;
     }
@@ -132,22 +171,27 @@ const addAttributesForNode = (data: any, nodes: Node[], currentNode: Node<any>, 
             return;
         }
     }
-    const attributeId = uniqueFlowId()?.toString();
-    currentNode.data.attributes.push({
-        "id": attributeId,
-        "label": attributeName,
-        "required": currentNode.data.required?.includes(attributeName),
-        "value": attributeType ?? attributeValue?.type + ' ' + attributeValue?.format
-    });
-    const connectionData = nodes.find((node) => node?.data?.label === attributeType);
-
-     if(connectionData){
-        createEdgesData(attributeId, connectionData?.id, edges);
+    const attributeData = {
+        id: attributeId,
+        label: attributeName,
+        required: currentNode.data.required?.includes(attributeName),
+        value: attributeType ?? attributeValue?.type + ' ' + (attributeValue?.format !== 'undefined' ? attributeValue?.format : ''),
+        type: 'attribute',
+        attributeParentId: currentNode?.id
     }
-     return currentNode;
+    currentNode.data.attributes.push(attributeData);
+    currentNode.data.attributesIds.push(attributeId);
+
+    nodes.push({
+        id: attributeId,
+        data: attributeData,
+        position: {'x': 0, 'y': 0},
+    });
+
+    return currentNode;
 }
 
- const updateNodeParentId = (parentId: any, node: Node, nodes: Node[]) => {
+const updateNodeParentId = (parentId: any, node: Node, nodes: Node[]) => {
     const find = nodes.find((n) => n.id === node.id);
     if (find) {
         nodes.splice(nodes.indexOf(find), 1);
@@ -188,30 +232,37 @@ export const prepareEdges = (nodes: Node[]) => {
     return edges
 }
 
-export const getNodes = (nodes: Node[]) => {
+export const getNodes = (nodes: Node[], graphEdges?: Edge[]) => {
     const newNodes: Node[] = [];
+    let objectIndex = 0;
 
-    nodes.forEach((node, index) => {
+    nodes.forEach((node) => {
         const parentNode = node?.data?.parentId ? nodes?.find((n) => n.id === node?.data?.parentId) : null;
         const childIds = nodes?.filter((n) => n?.data?.parentId === node?.id)?.map((n) => n?.id) ?? null;
-        const isZeroXPosition = node?.data?.outputConnections?.filter((con: string) => con !== node?.data?.parentId)?.length > 0;
+        const isZeroXPosition = objectIndex === 0;
+
+        const sourcetargetEdges = graphEdges?.filter((edge) => edge?.source === node?.id)?.map((edge) => edge?.target);
+        const targetsourceEdges = graphEdges?.filter((edge) => edge?.target === node?.id)?.map((edge) => edge?.source);
+
+        // const target2sourceEdges = graphEdges?.filter((edge) => edge?.target === node?.id)?.map((edge) => edge?.target);
+        // const source2targetEdges = graphEdges?.filter((edge) => edge?.source === node?.id)?.map((edge) => edge?.source);
 
         // we form arrays of inputs and outputs of nodes from the type of these connections.
         // We define that inherited connection have a top\bottom position, and compositions have a right\left position
         const outputRightConnections = node?.data?.outputConnections?.filter((con: string) => con !== node?.data?.parentId && con !== node?.id);
-        const outputLeftConnections = node?.data?.outputConnections?.filter((con: string) => con !== node?.data?.parentId && con === node?.id);
+        const outputLeftConnections = sourcetargetEdges;
 
         const outputTopConnections = node?.data?.outputConnections?.filter((con: string) => con === node?.data?.parentId);
 
-        const inputLeftConnections = node?.data?.inputConnections?.filter((con: string) => !childIds?.includes(con));
+        const inputLeftConnections = targetsourceEdges;
 
         const inputBottomConnections = childIds.filter((child: string) => node?.data?.inputConnections?.includes(child));
 
         const targetNode = {
             ...node,
             position: {
-                x: isZeroXPosition ? 0 : (NODE_WIDTH * 2),
-                y: NODE_HEIGHT * (isZeroXPosition ? 3 : 2) * (index + 1),
+                x: isZeroXPosition ? 0 : (node?.data?.attributeParentId ? nodes.find((node) => node?.id === node?.data?.attributeParentId)?.position?.x : (NODE_WIDTH * 2)),
+                y: NODE_HEIGHT * (isZeroXPosition ? 3 : 2) * (objectIndex + 1),
             },
             data: {
                 ...node?.data, parent: parentNode, childIds: childIds,
@@ -221,7 +272,7 @@ export const getNodes = (nodes: Node[]) => {
             },
             type: NODE_CUSTOM_TYPE
         } as Node;
-
+        if(!node?.data?.attributeParentId) objectIndex +=1;
         newNodes.push(targetNode);
     });
     return newNodes;

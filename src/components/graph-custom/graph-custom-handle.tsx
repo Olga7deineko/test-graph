@@ -4,6 +4,7 @@ import { HandleType } from '../../constants/graph.constants';
 import { GraphCustomHandleProps } from '../../models/model';
 
 const GraphCustomHandle = ({ connections, type, position, nodeId, parentId }: GraphCustomHandleProps) => {
+    // if (connections?.length > 0) console.log('GraphCustomHandle', nodeId, connections, type);
     return (
         <>
             {connections?.length > 0 && (

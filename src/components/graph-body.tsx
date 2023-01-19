@@ -1,5 +1,5 @@
 import { Node } from '@reactflow/core/dist/esm/types/nodes';
-import React, { MouseEvent as ReactMouseEvent, useCallback, useEffect } from 'react';
+import React, { MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo } from 'react';
 import {
     addEdge,
     Background,
@@ -15,16 +15,14 @@ import { GraphBodeProps } from '../models/model';
 import { getNodes } from '../utils/graph.utils';
 import GraphCustomNode from './graph-custom/graph-custom-node';
 
-const nodeTypes = {
-    custom: GraphCustomNode
-};
-
 const GraphBody = ({
                        graphNodes,
                        graphEdges,
                        selectedId,
                        setSelectedId
                    }: GraphBodeProps): any => {
+    const nodeTypes = useMemo(() => ({ custom: GraphCustomNode }), []);
+
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const onConnect = useCallback(
@@ -34,7 +32,7 @@ const GraphBody = ({
 
     useEffect(() => {
         if (graphNodes?.length) {
-            setNodes(getNodes(graphNodes));
+            setNodes(getNodes(graphNodes, graphEdges));
         }
         console.log('graphEdges', graphEdges, getNodes(graphNodes));
         if (graphEdges?.length) {

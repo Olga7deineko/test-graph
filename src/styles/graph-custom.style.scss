@@ -79,6 +79,7 @@
       &-label {
         display: flex;
         margin-right: 5px;
+        word-break: break-all;
 
         &-required {
           color: red;

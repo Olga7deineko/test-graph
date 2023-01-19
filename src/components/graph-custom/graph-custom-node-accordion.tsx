@@ -4,6 +4,7 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 import React from 'react';
 import GraphCustomNodeAttributes from '../../containers/graph-custom-node-attributes.container';
 import { GraphCustomNodeAccordionProps } from '../../models/model';
+import GraphCustomNodeRow from '../../containers/graph-custom-node-row.container';
 
 const GraphCustomNodeAccordion = ({ selected, data, nodeId }: GraphCustomNodeAccordionProps) => {
     return (
@@ -12,7 +13,8 @@ const GraphCustomNodeAccordion = ({ selected, data, nodeId }: GraphCustomNodeAcc
             sx={{
                 bgcolor: '#edf1f5',
                 borderRadius: '4px'
-            }}>
+            }}
+            expanded={true}>
             <AccordionSummary
                 className={`graph-node-header ${selected ? 'selected' : ''}`}
                 expandIcon={<ExpandMoreIcon/>}
@@ -23,6 +25,7 @@ const GraphCustomNodeAccordion = ({ selected, data, nodeId }: GraphCustomNodeAcc
                 </div>
             </AccordionSummary>
             <AccordionDetails>
+                <GraphCustomNodeRow nodeId={nodeId}/>
                 {<GraphCustomNodeAttributes attributes={data?.attributes} nodeId={nodeId}/>}
                 {data?.parentId && (
                     <div className="graph-node-extend">

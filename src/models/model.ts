@@ -55,6 +55,12 @@ export interface UpdateNodePayload {
     nodes: Node[];
 }
 
+export interface GraphCustomNodeRowProps {
+    nodes: Node[];
+    edges?: Edge[];
+    nodeId?: string;
+}
+
 export interface GraphCustomNodeAttributesProps {
     attributes?: NodeDataAttribute[];
     nodeId?: string;

@@ -18,7 +18,9 @@ const GraphSidebar = ({ graphNodes, selectedId, setSelectedId }: GraphSidebarPro
     return graphNodes?.length > 0 && (
         <Box className="graph-sidebar">
             <List component="nav">
-                {graphNodes?.map((node: Node) => (<ListItemButton
+                {graphNodes?.filter((n:Node) => {
+                    return n?.data?.type === 'object'
+                })?.map((node: Node) => (<ListItemButton
                     key={'listItem' + node.id + Math.random()}
                     selected={selectedId === node.id}
                     onClick={(event) => handleListItemClick(event, node?.id)}
