@@ -22,7 +22,7 @@ const GraphCustomNode = ({ data, selected, id }: any) => {
                 position={Position.Bottom}
                 nodeId={id}
             />
-            {data?.type === 'object' && <GraphCustomNodeAccordion selected={selected} data={data} nodeId={id}/>}
+             <GraphCustomNodeAccordion selected={selected} data={data} nodeId={id}/>
             <GraphCustomHandle
                 connections={data?.outputRightConnections}
                 type={HandleType.Source}

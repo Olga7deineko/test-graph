@@ -17,13 +17,14 @@ export const prepareData = (data: any) => {
     return {nodes, edges};
 }
 
-const createEdgesData = (sourceId: string, targetId: string, acumEdges: Edge[], node?: Node) => {
-    if (sourceId && targetId) {
+const createEdgesData = (sourceId: string, targetId: string, acumEdges: Edge[],parentSourceId?: string, node?: Node) => {
+    const currentSourceId = parentSourceId ?? sourceId;
+    if (currentSourceId && targetId) {
         acumEdges.push({
-            id: `e${sourceId}-e${targetId}`,
-            source: sourceId,
+            id: `${sourceId}-${targetId}`,
+            source: currentSourceId,
             target: targetId,
-            targetHandle: `${targetId}${sourceId}`,
+            targetHandle: `${targetId}${currentSourceId}`,
             sourceHandle: `${sourceId}${targetId}`,
             type: EDGE_STEP_TYPE,
             markerEnd: {
@@ -57,7 +58,7 @@ const createNodeRecursive = (data: any, nodes: Node[], edges: Edge[]) : any => {
                 // Create Parent Node
                 let parentNode = createNodeRecursive(allOfElement, nodes, edges);
                 updateNodeParentId(parentNode?.id, currentNode, nodes);
-                parentNode?.id && createEdgesData(currentNode?.id, parentNode?.id, edges, currentNode);
+                parentNode?.id && createEdgesData(currentNode?.id, parentNode?.id, edges, undefined, currentNode);
             } else if (allOfElement.type === 'object' && allOfElement.properties && data.title) {
                 // Create current node attribute and compose node
                 addAttributesForNode(allOfElement, nodes, currentNode, edges);
@@ -69,7 +70,7 @@ const createNodeRecursive = (data: any, nodes: Node[], edges: Edge[]) : any => {
             if (allOfElement.type === 'object' && allOfElement?.xml?.name && allOfElement.properties && !data.title) {
                 const parentNode = createNodeRecursive(allOfElement, nodes, edges);
                 updateNodeParentId(parentNode?.id, currentNode, nodes);
-                parentNode?.id && createEdgesData(currentNode?.id, parentNode?.id, edges, currentNode);
+                parentNode?.id && createEdgesData(currentNode?.id, parentNode?.id, edges, undefined, currentNode);
                 addAttributesForNode(allOfElement, nodes, currentNode, edges);
             }
         }
@@ -93,6 +94,7 @@ const createNode = (data: any, nodes: Node[]) => {
             type: 'object'
         },
         position: {'x': 0, 'y': 0},
+        type: NODE_CUSTOM_TYPE
     };
     nodes.push(node);
     return node;
@@ -106,14 +108,13 @@ const addAttributesForNode = (data: any, nodes: Node[], currentNode: Node<any>, 
                     value.title = currentNode.data.label + ' ' + key;
                     const extNode = createNodeRecursive(value, nodes, edges);
                     addExtNodeAttribute(edges, extNode, nodes, key, value);
-                    addNodeAttribute(edges, currentNode, nodes, key, value);
-                    createEdgesData(currentNode?.id, extNode?.id, edges);
+                    addNodeAttribute(edges, currentNode, nodes, key, value, true);
                 } else if (value?.type === 'object') {
                     const createdNode = createNodeRecursive(value, nodes, edges);
-                    addNodeAttribute(edges, currentNode, nodes, key, value, createdNode?.data.label);
+                    addNodeAttribute(edges, currentNode, nodes, key, value,true, createdNode?.data.label);
                 } else if (value?.type === 'array') {
                     const createdNode = createNodeRecursive(value.items, nodes, edges);
-                    addNodeAttribute(edges, currentNode, nodes, key, value, createdNode?.data.label);
+                    addNodeAttribute(edges, currentNode, nodes, key, value, true, createdNode?.data.label);
                 } else if (value?.['oneOf'] && value?.['oneOf'].length > 0) {
                     for (const oneOfElement of value?.['oneOf']) {
                         const createdNode = createNodeRecursive(oneOfElement, nodes, edges);
@@ -121,7 +122,7 @@ const addAttributesForNode = (data: any, nodes: Node[], currentNode: Node<any>, 
 
                     }
                 } else {
-                    addNodeAttribute(edges, currentNode, nodes, key, value);
+                    addNodeAttribute(edges, currentNode, nodes, key, value, false);
                 }
             })
     }
@@ -141,13 +142,9 @@ const addExtNodeAttribute = (edges: Edge[],
                 nodes,
                 `[${value.additionalProperties.items.type}]`,
                 null,
+                false,
                 `${key}Schema`);
         }
-    }
-    const connectionData = nodes.find((node) => node?.data?.label.includes(key));
-
-    if (connectionData) {
-        createEdgesData(key, connectionData?.id, edges);
     }
     return currentNode
 }
@@ -157,12 +154,13 @@ const addNodeAttribute = (edges: Edge[],
                           nodes: Node[],
                           attributeName: string,
                           attributeValue: any,
+                          isHasConnection: boolean,
                           attributeType?: string) => {
     const attributeId = uniqueFlowId()?.toString();
     const connectionData = nodes.find((node) => node?.data?.label === attributeType);
 
     if (connectionData) {
-        createEdgesData(attributeId, connectionData?.id, edges);
+        createEdgesData(attributeId, connectionData?.id, edges, currentNode?.id);
     }
 
     if (currentNode.data.attributes.find((a: any) => a.label === attributeName)) {
@@ -175,21 +173,16 @@ const addNodeAttribute = (edges: Edge[],
         }
     }
     const attributeData = {
-        id: uniqueFlowId()?.toString(),
+        id: attributeId,
         label: attributeName,
         required: currentNode.data.required?.includes(attributeName),
         value: attributeType ?? attributeValue?.type + ' ' + (attributeValue?.format !== 'undefined' ? attributeValue?.format : ''),
         type: 'attribute',
+        sourceId: connectionData ? attributeId + connectionData?.id : null,
         attributeParentId: currentNode?.id
     }
     currentNode.data.attributes.push(attributeData);
     currentNode.data.attributesIds.push(attributeId);
-
-    nodes.push({
-        id: attributeId,
-        data: attributeData,
-        position: {'x': 0, 'y': 0},
-    });
 
     return currentNode;
 }
@@ -203,9 +196,10 @@ const updateNodeParentId = (parentId: any, node: Node, nodes: Node[]) => {
     }
 }
 
+let iterator = 0;
 export const uniqueFlowId = () => {
-    const array = new Uint32Array(1);
-    return crypto.getRandomValues(array)[0];
+    iterator++;
+    return iterator;
 }
 
 export const getNodes = (nodes: Node[], graphEdges?: Edge[]) => {

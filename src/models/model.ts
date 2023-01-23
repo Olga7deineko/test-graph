@@ -47,14 +47,6 @@ export interface GraphChangeAttributeProps {
     isAttribute: boolean;
 }
 
-export interface UpdateNodePayload {
-    nodeId?: string;
-    id: string;
-    attributeName: string;
-    attributeValue: string;
-    nodes: Node[];
-}
-
 export interface GraphCustomNodeRowProps {
     nodes: Node[];
     edges?: Edge[];
@@ -63,16 +55,10 @@ export interface GraphCustomNodeRowProps {
 
 export interface GraphCustomNodeAttributesProps {
     attributes?: NodeDataAttribute[];
-    nodeId?: string;
-    updateNode: (data: UpdateNodePayload) => void;
-    nodes: Node[];
-    edges?: Edge[];
 }
 
 export interface GraphCustomNodeAttributeProps {
     attribute: NodeDataAttribute;
-    setNewValue: (id: string, attributeName: string, attributeValue: string) => void;
-    edges?: Edge[];
 }
 
 export interface GraphCustomHandleProps {

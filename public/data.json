@@ -1,204 +1,272 @@
 {
-  "nodes": [
+  "title": "Cat",
+  "x-tag": "TMF",
+  "description": "The **cat** (*Felis catus*) is a domestic species of small carnivorous mammal.\nIt is the only domesticated species in the family Felidae and is often referred to as the domestic cat to distinguish it from the wild members of the family.\nA cat can either be a house cat, a farm cat or a feral cat; the latter ranges freely and avoids human contact.\nDomestic cats are valued by humans for companionship and their ability to kill rodents. About 60 cat breeds are recognized by various cat registries.\n\nThe cat is similar in anatomy to the other felid species: \n  - it has a strong flexible body, \n  - quick reflexes, \n  - sharp teeth and retractable claws adapted to killing small prey. \n'### Its night vision and sense of smell are well developed.'\nCat communication includes vocalizations like meowing, purring, trilling, hissing, growling and grunting as well as cat-specific body language.\nA predator that is most active at dawn and dusk (crepuscular), the cat is a solitary hunter but a social species.\nIt can hear sounds too faint or too high in frequency for human ears, such as those made by mice and other small mammals.\nCats also secrete and perceive pheromones.\n",
+  "allOf": [
     {
-      "id": "1",
-      "data": {
-        "label": "Pet",
-        "attributes": [
-          {
-            "id": "11",
-            "label": "Pet Type",
-            "required": true,
-            "value": "Enum [string]"
-          },
-          {
-            "id": "12",
-            "label": "Tag",
-            "required": false,
-            "value": "Array [Tag]"
-          },
-          {
-            "id": "1",
-            "label": "Category",
-            "required": false,
-            "value": "Category"
-          },
-          {
-            "id": "14",
-            "label": "Id",
-            "required": false,
-            "value": "integer <int64>"
-          },
-          {
-            "id": "15",
-            "label": "Name",
-            "required": true,
-            "value": "String"
-          },
-          {
-            "id": "16",
-            "label": "The Very First Long Name Of Celected Animal",
-            "required": false,
-            "value": "Pet"
-          },
-          {
-            "id": "17",
-            "label": "The Very First Long Name Of Celected Animal",
-            "required": false,
-            "value": "Pet"
-          },
-          {
-            "id": "18",
-            "label": "Status",
-            "required": false,
-            "value": "Enum (String)"
-          },
-          {
-            "id": "19",
-            "label": "Color",
-            "required": false,
-            "value": "Enum (String)"
-          }
-        ],
-        "inputConnections": ["1", "4"],
-        "outputConnections": ["1", "2", "3"]
+      "title": "Pet",
+      "required": [
+        "name",
+        "petType"
+      ],
+      "type": "object",
+      "discriminator": {
+        "propertyName": "petType"
       },
-      "position": { "x": 0, "y": 0 }
+      "externalDocs": {
+        "description": "Wiki info about Pet",
+        "url": "https://en.wikipedia.org/wiki/Pet"
+      },
+      "properties": {
+        "petType": {
+          "description": "### Type of the animal\nThe discriminator parameter of the pet traits.\nWhile many people have kept many different species of animals in captivity over the course of human history, only a relative few have been kept long enough to be considered domesticated.\nOther types of animal, notably monkeys, have never been domesticated but are still sold and kept as pets.\nThere are also inanimate objects that have been kept as \"pets\", either as a form of a game or humorously (e.g. the Pet Rock or Chia Pet).\nSome wild animals are kept as pets, such as tigers, even though this is illegal. **There is a market for illegal pets.**\n\n#### Domesticated\n[Domesticated](https://en.wikipedia.org/wiki/Domesticated) pets are most common. \nA domesticated animal is a species that has been made fit for a human environment by being consistently kept in captivity and selectively bred over a long enough period of time that it exhibits marked differences in behavior and appearance from its wild relatives.\nDomestication contrasts with taming, which is simply when an un-domesticated, wild animal has become tolerant of human presence, and perhaps even enjoys it.\n",
+          "type": "string",
+          "enum": [
+            "Cat",
+            "Dog"
+          ]
+        },
+        "id": {
+          "description": "Pet identifier. Common for all pet types.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "category": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "Internal category identifier",
+              "type": "integer",
+              "format": "int64"
+            },
+            "name": {
+              "description": "Category name",
+              "type": "string"
+            },
+            "@type": {
+              "description": "Internal type of the category",
+              "type": "string"
+            }
+          },
+          "xml": {
+            "name": "Category"
+          }
+        },
+        "name": {
+          "description": "Name of the pet",
+          "type": "string",
+          "example": "doggie"
+        },
+        "tags": {
+          "type": "array",
+          "xml": {
+            "name": "tag",
+            "wrapped": false
+          },
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64",
+                "example": 123
+              },
+              "name": {
+                "type": "string",
+                "example": "Funny"
+              }
+            },
+            "xml": {
+              "name": "Tag"
+            }
+          }
+        },
+        "status": {
+          "type": "string",
+          "description": "Pet status in the store",
+          "enum": [
+            "available",
+            "pending",
+            "sold"
+          ]
+        },
+        "color": {
+          "type": "string",
+          "description": "Color of the pet",
+          "enum": [
+            "Black",
+            "Yellow",
+            "Red",
+            "White",
+            "Gray"
+          ]
+        },
+        "theVeryFirstLongNamedParentOfTheSelectedAnimal": {
+          "allOf": [
+            {
+              "description": "1-st parent of the pet"
+            },
+            {
+              "title": "Pet",
+              "required": [
+                "name",
+                "petType"
+              ],
+              "type": "object",
+              "discriminator": {
+                "propertyName": "petType"
+              },
+              "externalDocs": {
+                "description": "Wiki info about Pet",
+                "url": "https://en.wikipedia.org/wiki/Pet"
+              },
+              "xml": {
+                "name": "Pet"
+              }
+            }
+          ]
+        },
+        "anotherOneLongNamedParentOfTheSelectedAnimal": {
+          "allOf": [
+            {
+              "description": "2-st parent of the pet"
+            },
+            {
+              "title": "Cat",
+              "x-tag": "TMF",
+              "description": "The **cat** (*Felis catus*) is a domestic species of small carnivorous mammal.\nIt is the only domesticated species in the family Felidae and is often referred to as the domestic cat to distinguish it from the wild members of the family.\nA cat can either be a house cat, a farm cat or a feral cat; the latter ranges freely and avoids human contact.\nDomestic cats are valued by humans for companionship and their ability to kill rodents. About 60 cat breeds are recognized by various cat registries.\n\nThe cat is similar in anatomy to the other felid species: \n  - it has a strong flexible body, \n  - quick reflexes, \n  - sharp teeth and retractable claws adapted to killing small prey. \n'### Its night vision and sense of smell are well developed.'\nCat communication includes vocalizations like meowing, purring, trilling, hissing, growling and grunting as well as cat-specific body language.\nA predator that is most active at dawn and dusk (crepuscular), the cat is a solitary hunter but a social species.\nIt can hear sounds too faint or too high in frequency for human ears, such as those made by mice and other small mammals.\nCats also secrete and perceive pheromones.\n"
+            }
+          ]
+        }
+      },
+      "xml": {
+        "name": "Pet"
+      }
     },
     {
-      "id": "2",
-      "data": {
-        "label": "Tag",
-        "attributes": [
-          {
-            "id": "21",
-            "label": "ID",
-            "required": false,
-            "value": "integer <int64>"
-          },
-          {
-            "id": "22",
-            "label": "Name",
-            "required": false,
-            "value": "string"
+      "type": "object",
+      "properties": {
+        "category": {
+          "x-tag": "NC",
+          "oneOf": [
+            {
+              "description": "A representation of a category for Lazy Cats only",
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "Internal category identifier",
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "name": {
+                      "description": "Category name",
+                      "type": "string"
+                    },
+                    "@type": {
+                      "description": "Internal type of the category",
+                      "type": "string"
+                    }
+                  },
+                  "xml": {
+                    "name": "Category"
+                  }
+                },
+                {
+                  "title": "LazyCatsCategory",
+                  "type": "object",
+                  "properties": {
+                    "fuzzy": {
+                      "type": "string",
+                      "description": "The fuzzy measure",
+                      "enum": [
+                        "low",
+                        "medium",
+                        "high",
+                        "aggressive"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "fuzzy"
+                  ]
+                }
+              ]
+            },
+            {
+              "description": "A representation of a category for Crazy Cats only",
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "Internal category identifier",
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "name": {
+                      "description": "Category name",
+                      "type": "string"
+                    },
+                    "@type": {
+                      "description": "Internal type of the category",
+                      "type": "string"
+                    }
+                  },
+                  "xml": {
+                    "name": "Category"
+                  }
+                },
+                {
+                  "title": "CrazzyCatsCategory",
+                  "type": "object",
+                  "properties": {
+                    "crazzy": {
+                      "type": "string",
+                      "description": "The crazzy measure",
+                      "enum": [
+                        "low",
+                        "average",
+                        "aggressive"
+                      ]
+                    },
+                    "extendedAttributes": {
+                      "description": "Additional attributes as a mapped strings",
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "crazzy"
+                  ]
+                }
+              ]
+            }
+          ],
+          "discriminator": {
+            "propertyName": "@type"
           }
-        ],
-        "inputConnections": ["1"]
+        },
+        "huntingSkill": {
+          "x-tag": "TMF",
+          "type": "string",
+          "description": "The measured skill for hunting",
+          "enum": [
+            "clueless",
+            "lazy",
+            "aggressive"
+          ]
+        }
       },
-      "position": { "x": 0, "y": 0 }
-    },
-    {
-      "id": "3",
-      "data": {
-        "label": "Category",
-        "attributes": [
-          {
-            "id": "31",
-            "label": "ID",
-            "required": false,
-            "value": "integer <int64>"
-          },
-          {
-            "id": "32",
-            "label": "Name",
-            "required": false,
-            "value": "string"
-          },
-          {
-            "id": "33",
-            "label": "@type",
-            "required": false,
-            "value": "string"
-          }
-        ],
-        "inputConnections": ["1", "5", "6"]
-
-      },
-      "position": { "x": 0, "y": 0 }
-    },
-    {
-      "id": "4",
-      "data": {
-        "label": "Cat",
-        "description": "TMF",
-        "attributes": [
-          {
-            "id": "41",
-            "label": "PetType",
-            "required": true,
-            "value": "= Cat"
-          },
-          {
-            "id": "42",
-            "label": "",
-            "required": false,
-            "value": "NC"
-          },
-          {
-            "id": "43",
-            "label": "Category",
-            "required": false,
-            "value": "LazyCatCategory or CrazyCatCategory"
-          },
-          {
-            "id": "44",
-            "label": "",
-            "required": false,
-            "value": "TMF"
-          },
-          {
-            "id": "45",
-            "label": "huntingSkill",
-            "required": true,
-            "value": "Enum (String)"
-          }
-        ],
-        "outputConnections": ["1", "5", "6"],
-        "parentId": "1"
-      },
-      "position": { "x": 0, "y": 0 }
-    },
-    {
-      "id": "5",
-      "data": {
-        "label": "LazyCatCategory",
-        "attributes": [
-          {
-            "id": "51",
-            "label": "Fuzzy",
-            "required": true,
-            "value": "Enum [String]"
-          }
-        ],
-        "inputConnections": ["4"],
-        "outputConnections": ["3"],
-        "parentId": "3"
-      },
-      "position": { "x": 0, "y": 0 }
-    },
-    {
-      "id": "6",
-      "data": {
-        "label": "CrazyCatCategory",
-        "attributes": [
-          {
-            "id": "61",
-            "label": "Crazzy",
-            "required": true,
-            "value": "Enum [string]"
-          },
-          {
-            "id": "63",
-            "label": "Extended Attributes",
-            "required": false,
-            "value": "MAP (Array)"
-          }
-        ],
-        "inputConnections": ["4"],
-        "outputConnections": ["3"],
-        "parentId": "3"
-      },
-      "position": { "x": 0, "y": 0 }
+      "required": [
+        "huntingSkill"
+      ]
     }
   ]
 }

@@ -13,8 +13,7 @@ const GraphCustomNodeAccordion = ({ selected, data, nodeId }: GraphCustomNodeAcc
             sx={{
                 bgcolor: '#edf1f5',
                 borderRadius: '4px'
-            }}
-            expanded={true}>
+            }}>
             <AccordionSummary
                 className={`graph-node-header ${selected ? 'selected' : ''}`}
                 expandIcon={<ExpandMoreIcon/>}
@@ -25,15 +24,15 @@ const GraphCustomNodeAccordion = ({ selected, data, nodeId }: GraphCustomNodeAcc
                 </div>
             </AccordionSummary>
             <AccordionDetails>
-                <GraphCustomNodeRow nodeId={nodeId}/>
+                {data?.attributes && data?.attributes.map((attribute, index) => (
+                    <GraphCustomNodeRow key={attribute?.label + index} data={attribute} nodeId={nodeId}/>))}
                 {data?.parentId && (
                     <div className="graph-node-extend">
                         <div className="graph-node-extend-label">
                             <AccountTreeIcon/>
                             {data?.parent?.data?.label}
                         </div>
-                        {<GraphCustomNodeAttributes attributes={data?.parent?.data?.attributes}
-                                                    nodeId={data?.parent?.id}/>}
+                        {<GraphCustomNodeAttributes attributes={data?.parent?.data?.attributes}/>}
                     </div>
                 )}
             </AccordionDetails>

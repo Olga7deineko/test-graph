@@ -1,15 +1,6 @@
 import { Node } from '@reactflow/core/dist/esm/types/nodes';
-import React, { MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo } from 'react';
-import {
-    addEdge,
-    Background,
-    Connection,
-    Edge,
-    ReactFlow,
-    ReactFlowProvider,
-    useEdgesState,
-    useNodesState
-} from 'reactflow';
+import React, { MouseEvent as ReactMouseEvent, useEffect, useMemo } from 'react';
+import { Background, ReactFlow, ReactFlowProvider, useEdgesState, useNodesState } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { GraphBodeProps } from '../models/model';
 import { getNodes } from '../utils/graph.utils';
@@ -21,14 +12,10 @@ const GraphBody = ({
                        selectedId,
                        setSelectedId
                    }: GraphBodeProps): any => {
-    const nodeTypes = useMemo(() => ({ custom: GraphCustomNode }), []);
+    const nodeTypes = useMemo(() => ({ custom: GraphCustomNode}), []);
 
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-    const onConnect = useCallback(
-        (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
-        [setEdges]
-    );
 
     useEffect(() => {
         if (graphNodes?.length) {
@@ -62,7 +49,6 @@ const GraphBody = ({
                     onNodesChange={onNodesChange}
                     edges={edges}
                     onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
                     onNodeClick={handleElementClick}
                     fitView
                     nodeTypes={nodeTypes}

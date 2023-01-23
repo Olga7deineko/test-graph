@@ -24,14 +24,10 @@ export const graphNodesSlice = createSlice({
         },
         setSelectedId: (state, action: PayloadAction<string>) => {
             state.selectedId = action?.payload;
-        },
-        updateNode: (state, action: PayloadAction<any>) =>{},
-        updateNodes: (state, action: PayloadAction<any>) =>{
-            state.nodes = action?.payload;
         }
     },
 })
 
-export const { fetchNodes, fetchNodesSucceeded, setSelectedId, updateNode, updateNodes } = graphNodesSlice.actions
+export const { fetchNodes, fetchNodesSucceeded, setSelectedId} = graphNodesSlice.actions
 
 export default graphNodesSlice.reducer
